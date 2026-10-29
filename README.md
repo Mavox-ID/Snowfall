@@ -6,7 +6,7 @@
 
 <p align="center">It's snowing on your desktop.</p>
 
-Link...here
+https://github.com/user-attachments/assets/eade4202-9065-4083-9a79-d367af2fc07d
 
 Ready for Christmas, but your computer isn't yet? Snowfall brings a quiet snowfall to your GNOME desktop. Flakes drift across the screen and settle in soft drifts on your windows, on your dock and along the bottom edge. Sweep them aside with the cursor, shake a window and watch its snow slide off
 
