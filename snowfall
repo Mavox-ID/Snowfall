@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+UUID="snowfall@mavox-id.github.io"
+SCHEMA="org.gnome.shell.extensions.snowfall"
+DIR="${XDG_DATA_HOME:-$HOME/.local/share}/gnome-shell/extensions/$UUID/schemas"
+gs() { gsettings --schemadir "$DIR" "$@"; }
+
+usage() {
+cat <<'TXT'
+snowfall — control the snowfall
+
+  snowfall on | off | toggle        turn snow on / off
+  snowfall status                   show current settings
+  snowfall level <level>            off | light | steady | heavy | variable
+  snowfall density <0.2-3>          flake count multiplier
+  snowfall wind <0-3>               wind strength
+  snowfall size <0.5-2.5>           flake size
+  snowfall accumulate on|off        build up drifts
+  snowfall melt on|off              melting
+  snowfall cursor on|off            plow snow with the cursor
+  snowfall behind on|off            snow behind windows
+  snowfall clear                    sweep away all snow
+  snowfall prefs                    open the settings window
+  snowfall get <key>                read any schema key
+  snowfall set <key> <value>        write any schema key
+  snowfall reset                    restore default settings
+TXT
+}
+
+onoff() { case "${1:-}" in on|true|1|yes) echo true ;; off|false|0|no) echo false ;; *) echo "Expected on or off" >&2; exit 2 ;; esac; }
+need() { [ -n "${2:-}" ] || { echo "Missing argument: $1" >&2; exit 2; }; }
+
+[ -d "$DIR" ] || { echo "Snowfall is not installed ($DIR not found). Run install.sh" >&2; exit 1; }
+
+cmd="${1:-help}"; shift || true
+case "$cmd" in
+    on)     gs set $SCHEMA enabled true ;;
+    off)    gs set $SCHEMA enabled false ;;
+    toggle) [ "$(gs get $SCHEMA enabled)" = true ] && gs set $SCHEMA enabled false || gs set $SCHEMA enabled true ;;
+    level)  need level "${1:-}"; gs set $SCHEMA intensity "$1"; [ "$1" = off ] || gs set $SCHEMA enabled true ;;
+    density) need number "${1:-}"; gs set $SCHEMA density "$1" ;;
+    wind)   need number "${1:-}"; gs set $SCHEMA wind "$1" ;;
+    size)   need number "${1:-}"; gs set $SCHEMA flake-size "$1" ;;
+    accumulate) gs set $SCHEMA accumulate "$(onoff "${1:-}")" ;;
+    melt)   gs set $SCHEMA melt "$(onoff "${1:-}")" ;;
+    cursor) gs set $SCHEMA cursor-interaction "$(onoff "${1:-}")" ;;
+    behind) gs set $SCHEMA behind-windows "$(onoff "${1:-}")" ;;
+    clear)  n="$(gs get $SCHEMA clear-counter)"; gs set $SCHEMA clear-counter "$(( n + 1 ))" ;;
+    prefs)  exec gnome-extensions prefs "$UUID" ;;
+    get)    need key "${1:-}"; gs get $SCHEMA "$1" ;;
+    set)    need key "${1:-}"; need value "${2:-}"; gs set $SCHEMA "$1" "$2" ;;
+    status) gs list-recursively $SCHEMA | sed "s/^$SCHEMA //" | grep -v -e clear-counter -e shortcut ;;
+    reset)  gs reset-recursively $SCHEMA ;;
+    help|-h|--help) usage ;;
+    *) echo "Unknown command: $cmd" >&2; usage >&2; exit 2 ;;
+esac
