@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist gettext-domain="snowfall@local">
+  <schema id="org.gnome.shell.extensions.snowfall" path="/org/gnome/shell/extensions/snowfall/">
+
+    <key name="enabled" type="b">
+      <default>true</default>
+      <summary>Snow enabled</summary>
+    </key>
+
+    <key name="intensity" type="s">
+      <choices>
+        <choice value="off"/>
+        <choice value="light"/>
+        <choice value="steady"/>
+        <choice value="heavy"/>
+        <choice value="variable"/>
+      </choices>
+      <default>"steady"</default>
+      <summary>Snowfall intensity</summary>
+      <description>One of off, light, steady, heavy or variable</description>
+    </key>
+
+    <key name="density" type="d">
+      <range min="0.2" max="3.0"/>
+      <default>1.0</default>
+      <summary>Flake count multiplier</summary>
+    </key>
+
+    <key name="flake-size" type="d">
+      <range min="0.5" max="2.5"/>
+      <default>1.0</default>
+      <summary>Flake size</summary>
+    </key>
+
+    <key name="wind" type="d">
+      <range min="0.0" max="3.0"/>
+      <default>1.0</default>
+      <summary>Wind strength</summary>
+    </key>
+
+    <key name="accumulate" type="b">
+      <default>true</default>
+      <summary>Snow builds up into drifts</summary>
+    </key>
+
+    <key name="accumulation-speed" type="d">
+      <range min="0.2" max="6.0"/>
+      <default>1.5</default>
+      <summary>Drift accumulation speed</summary>
+    </key>
+
+    <key name="melt" type="b">
+      <default>false</default>
+      <summary>Drifts melt slowly</summary>
+    </key>
+
+    <key name="ground-snow" type="b">
+      <default>true</default>
+      <summary>Drift at the bottom of the screen</summary>
+    </key>
+
+    <key name="ground-depth" type="i">
+      <range min="4" max="80"/>
+      <default>24</default>
+      <summary>Max drift height at the bottom of the screen (px)</summary>
+    </key>
+
+    <key name="window-snow" type="b">
+      <default>true</default>
+      <summary>Snow on windows</summary>
+    </key>
+
+    <key name="dock-snow" type="b">
+      <default>true</default>
+      <summary>Snow on the dock / taskbar</summary>
+    </key>
+
+    <key name="ledge-depth" type="i">
+      <range min="3" max="40"/>
+      <default>12</default>
+      <summary>Max drift height on a window or dock (px)</summary>
+    </key>
+
+    <key name="cursor-interaction" type="b">
+      <default>true</default>
+      <summary>Cursor plows snow</summary>
+    </key>
+
+    <key name="behind-windows" type="b">
+      <default>false</default>
+      <summary>Snow falls behind windows</summary>
+    </key>
+
+    <key name="hide-on-fullscreen" type="b">
+      <default>true</default>
+      <summary>Hide snow in fullscreen apps</summary>
+    </key>
+
+    <key name="fps" type="i">
+      <range min="15" max="60"/>
+      <default>30</default>
+      <summary>Animation frame rate</summary>
+    </key>
+
+    <key name="show-indicator" type="b">
+      <default>true</default>
+      <summary>Top bar icon</summary>
+    </key>
+
+    <key name="toggle-shortcut" type="as">
+      <default><![CDATA[['<Super><Alt>s']]]></default>
+      <summary>Shortcut: toggle snow</summary>
+    </key>
+
+    <key name="clear-shortcut" type="as">
+      <default><![CDATA[['<Super><Alt>c']]]></default>
+      <summary>Shortcut: sweep away all snow</summary>
+    </key>
+
+    <key name="clear-counter" type="i">
+      <default>0</default>
+      <summary>Internal counter: any change sweeps the snow away</summary>
+    </key>
+
+  </schema>
+</schemalist>

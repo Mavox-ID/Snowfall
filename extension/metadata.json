@@ -1,0 +1,10 @@
+{
+  "uuid": "snowfall@mavox-id.github.io",
+  "name": "Snowfall",
+  "description": "Snow falls across your desktop, settles on windows, the dock and the bottom of the screen, and can be plowed aside with the cursor",
+  "shell-version": ["50", "51"],
+  "url": "https://github.com/Mavox-ID/Snowfall",
+  "settings-schema": "org.gnome.shell.extensions.snowfall",
+  "gettext-domain": "snowfall@mavox-id.github.io",
+  "version-name": "1.0"
+}
