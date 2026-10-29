@@ -1,4 +1,12 @@
-# ❄ Snowfall
+<p align="center">
+  <img src="assets/icon.png" width="128" height="128" alt="Snowfall icon">
+</p>
+
+<h1 align="center">❄ Snowfall ❄</h1>
+
+<p align="center">It's snowing on your desktop.</p>
+
+Link...here
 
 Ready for Christmas, but your computer isn't yet? Snowfall brings a quiet snowfall to your GNOME desktop. Flakes drift across the screen and settle in soft drifts on your windows, on your dock and along the bottom edge. Sweep them aside with the cursor, shake a window and watch its snow slide off
 
