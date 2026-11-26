@@ -48,6 +48,9 @@ export class Overlay {
 
         this._sigs.push([this._settings, this._settings.connect('changed', (_s, key) => this._onSetting(key))]);
         this._sigs.push([Main.layoutManager, Main.layoutManager.connect('monitors-changed', () => this._resize())]);
+        // Mutter may reorder window_group children as windows are restacked.
+        // Keep the overlay above the background and below the first window actor.
+        this._sigs.push([global.display, global.display.connect('restacked', () => this._keepBehindWindows())]);
 
         if (this._cfg.enabled && this._cfg.intensity !== 'off') this._sim.prefill();
         this._wake();
@@ -127,7 +130,7 @@ export class Overlay {
         if (this._cfg.behind) {
             const wg = global.window_group;
             wg.add_child(this._root);
-            wg.set_child_below_sibling(this._root, null);
+            this._keepBehindWindows();
         } else {
             Main.layoutManager.uiGroup.add_child(this._root);
         }
@@ -139,6 +142,40 @@ export class Overlay {
         if (this._behindNow) global.window_group.remove_child(this._root);
         else Main.layoutManager.uiGroup.remove_child(this._root);
         this._behindNow = null;
+    }
+
+    _keepBehindWindows() {
+        try {
+            const root = this._root;
+            const wg = global.window_group;
+            if (!root || !this._cfg.behind || !wg || root.get_parent() !== wg) return;
+
+            const children = wg.get_children();
+            const firstWindow = children.find(child => {
+                if (child === root) return false;
+                try {
+                    const metaWindow = child.meta_window ??
+                        (typeof child.get_meta_window === 'function' ? child.get_meta_window() : null);
+                    return metaWindow !== null && metaWindow !== undefined;
+                } catch (_e) {
+                    return false;
+                }
+            });
+
+            if (firstWindow) {
+                // Place snow immediately below the lowest window actor, not below
+                // the window group's background actor.
+                wg.set_child_below_sibling(root, firstWindow);
+                return;
+            }
+
+            // With no window actors, stay above the bottom/background sibling.
+            const background = children.find(child => child !== root);
+            if (background) wg.set_child_above_sibling(root, background);
+        } catch (_e) {
+            // Restacking can race actor destruction or reparenting; never let a
+            // stale actor/signal exception disable the animation loop.
+        }
     }
 
     _resize() {
